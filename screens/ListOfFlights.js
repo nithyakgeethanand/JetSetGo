@@ -1,14 +1,14 @@
 import { View, Text, StyleSheet, FlatList, TextInput, Touchable, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { colors } from '../src/assets/colors';
-import { Feather } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
+import { setDate } from 'date-fns';
 
 const ListOfFlights = ({ route }) => {
     const { data } = route.params;
     const [searchText, setSearchText] = useState('');
-    // const displayData = data.map(item => item.displayData);
-    // const airlines = displayData.map(item => item.airlines);
-
+    // const [sortByPrice, setSortByPrice] = useState(false);
+    const [sortOrder, setSortOrder] = useState('asc');
 
     const arraysFromJson = data.map(obj => ({
         id: obj.id,
@@ -23,7 +23,37 @@ const ListOfFlights = ({ route }) => {
         arrivalTime: obj.displayData.destination.arrTime.substring(11, 16),
     }));
 
-    const filteredFlights = arraysFromJson.filter(
+
+    const handleSortByPrice = () => {
+        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        // setSortByPrice((prevSortByPrice) => !prevSortByPrice);
+    };
+
+     // Sorting function to sort data by price
+    const sortByPrice = (a, b) => a.fare - b.fare;
+
+
+  // Function to sort data based on the current sort criteria and order
+  const sortData = () => {
+    let sortedData = [...arraysFromJson];
+    sortedData = sortedData.sort(sortByPrice);
+
+    if (sortOrder === 'desc') {
+      sortedData.reverse();
+    }
+    return sortedData;
+  };
+
+    // const sortedFlights = sortByPrice
+    //     ? [...arraysFromJson].sort((a, b) => a.fare - b.fare)
+    //     : arraysFromJson;
+
+    // if (sortOrder === 'desc') {
+    //     sortedFlights.reverse();
+    // }
+
+    console.log(data);
+    const filteredFlights = sortData().filter(
         (flight) =>
             flight.airlineName.toLowerCase().includes(searchText.toLowerCase())
     );
@@ -60,7 +90,7 @@ const ListOfFlights = ({ route }) => {
                     </View>
                     <View>
                         <Text style={styles.timeandfare}>₹ {item.fare}</Text>
-                        <Text>per adult</Text>
+                        <Text style={{ color: colors.gray }}>per adult</Text>
                     </View>
                 </View>
 
@@ -79,15 +109,10 @@ const ListOfFlights = ({ route }) => {
                     value={searchText}
                 />
             </View>
-            <TouchableOpacity style={{
-                flexDirection: "row",
-                alignItems: "flex-end",
-                justifyContent: "flex-end",
-                paddingBottom: 10,
-            }}
-            onPress={''}>
-                <Text>Filter by price</Text>
-                <Feather name="filter" size={20} color={colors.gray} />
+            <TouchableOpacity style={styles.sortingContainer}
+                onPress={handleSortByPrice}>
+                <Text>Sort by price</Text>
+                <FontAwesome name="sort" size={18} color={colors.gray} style={{paddingLeft: 5}} />
             </TouchableOpacity>
             <FlatList
                 data={filteredFlights}
@@ -109,6 +134,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
         marginBottom: 10,
         padding: 10,
+        borderRadius: 5,
 
     },
     timeandfare: {
@@ -130,5 +156,11 @@ const styles = StyleSheet.create({
         borderColor: '#ddd',
         borderRadius: 5,
         height: 50,
+    },
+    sortingContainer: {
+        flexDirection: "row",
+        alignItems: "flex-end",
+        justifyContent: "flex-end",
+        paddingBottom: 10,
     }
 })

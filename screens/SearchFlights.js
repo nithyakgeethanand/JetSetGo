@@ -23,8 +23,8 @@ const SearchFlights = () => {
     ]);
     const [modalVisible, setModalVisible] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [box1Items, setBox1Items] = useState(['DEL']);
-    const [box2Items, setBox2Items] = useState(['TRV']);
+    const [box1Items, setBox1Items] = useState(['DEL', 'Delhi']);
+    const [box2Items, setBox2Items] = useState(['TRV', 'Trivandrum']);
 
     const FetchAPI = async () => {
         try {
@@ -68,11 +68,9 @@ const SearchFlights = () => {
             <View style={styles.fromToContainer}>
 
                 <TouchableOpacity style={styles.box} onPress={null} >
-                    <View>
                         <Text style={styles.fromCity}>From</Text>
-                        {box1Items.map((item, index) => (<Text style={{ fontWeight: "bold", fontSize: 30 }}>{item}</Text>))}
-                        <Text style={styles.fromCity}>Delhi</Text>
-                    </View>
+                        <Text style={{ fontWeight: "bold", fontSize: 30 }}>{box1Items[0]}</Text>
+                        <Text style={styles.fromCity}>{box1Items[1]}</Text>
                 </TouchableOpacity>
 
 
@@ -85,8 +83,8 @@ const SearchFlights = () => {
 
                 <TouchableOpacity style={styles.box}>
                     <Text style={styles.fromCity}>To</Text>
-                    {box2Items.map((item, index) => (<Text style={{ fontWeight: "bold", fontSize: 30 }}>{item}</Text>))}
-                    <Text style={styles.fromCity}>Trivandrum</Text>
+                    <Text style={{ fontWeight: "bold", fontSize: 30 }}>{box2Items[0]}</Text>
+                    <Text style={styles.fromCity}>{box2Items[1]}</Text>
                 </TouchableOpacity>
 
             </View>
