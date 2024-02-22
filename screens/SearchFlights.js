@@ -30,8 +30,6 @@ const SearchFlights = () => {
         try {
             const response = await fetch("https://api.npoint.io/4829d4ab0e96bfab50e7");
             const json = await response.json();
-            // const airportCode = json?.data?.result[0]?.displayData?.source?.airport;
-            // setData(airportCode);
             setData(json.data.result);
         } catch (error) {
             console.log(error);
@@ -42,20 +40,10 @@ const SearchFlights = () => {
         FetchAPI();
     }, []);
 
-    //console.log(data);
-    //console.log("airlinesssss",data.fare);
-
     const swapDestinations = () => {
         const temp = [...box1Items];
         setBox1Items([...box2Items]);
         setBox2Items([...temp]);
-    }
-
-    const renderItem = ({ data }) => {
-        //console.log("hellooooooo",data.airportCode);
-        return <View>
-            {/* {data.filter((item) => <Text>{item.airportCode}</Text>)}  */}
-        </View>
     }
 
     const searchHandle = () => {
@@ -68,12 +56,10 @@ const SearchFlights = () => {
             <View style={styles.fromToContainer}>
 
                 <TouchableOpacity style={styles.box} onPress={null} >
-                        <Text style={styles.fromCity}>From</Text>
-                        <Text style={{ fontWeight: "bold", fontSize: 30 }}>{box1Items[0]}</Text>
-                        <Text style={styles.fromCity}>{box1Items[1]}</Text>
+                    <Text style={styles.fromCity}>From</Text>
+                    <Text style={{ fontWeight: "bold", fontSize: 30 }}>{box1Items[0]}</Text>
+                    <Text style={styles.fromCity}>{box1Items[1]}</Text>
                 </TouchableOpacity>
-
-
 
                 <View style={styles.circle}>
                     <TouchableOpacity onPress={swapDestinations}>
@@ -104,13 +90,6 @@ const SearchFlights = () => {
                             value={searchQuery}
                             onChangeText={(text) => setSearchQuery(text)}
                         />
-                        {console.log(data)}
-                        <FlatList
-                            data={data}
-                            renderItem={renderItem}
-                            //keyExtractor={(item) => item.id}
-                            style={{ maxHeight: 300 }}
-                        />
                     </View>
                 </View>
             </Modal>
@@ -132,7 +111,7 @@ const SearchFlights = () => {
                 />
             </View>
 
-            <View>
+            <View style={styles.passengers}>
                 <DropDownPicker
                     open={open}
                     value={value}
@@ -203,40 +182,42 @@ const styles = StyleSheet.create({
         color: colors.gray, fontSize: 20
     },
     datePickerContainer: {
-        borderWidth: 1,
+        borderWidth: 0,
         backgroundColor: colors.white,
-        borderColor: colors.gray,
-        padding: 5,
+        padding: 10,
         borderRadius: 8,
         marginVertical: 5,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: "space-between",
         marginTop: 25,
-    },
-    input: {
-        width: '100%',
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
-        paddingHorizontal: 10,
-        marginBottom: 20,
-
+        
     },
     bottom: {
         flex: 1,
         justifyContent: 'flex-end',
     },
     button: {
-        width: '100%',
         height: 50,
         backgroundColor: "green",
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 8
+        borderRadius: 8,
+        marginBottom:20
     },
     buttonText: {
-        fontSize: 16,
-        color: 'white',
+        fontSize: 20,
+        color: colors.white,
     },
+    passengers : {
+        borderWidth: 0,
+        backgroundColor: colors.white,
+        padding: 10,
+        borderRadius: 8,
+        marginVertical: 5,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: "space-between",
+        marginTop: 10,
+    }
 })

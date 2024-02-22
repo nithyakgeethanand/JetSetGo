@@ -28,9 +28,6 @@ const Home = () => {
                     </TouchableOpacity>
                 </ImageBackground>
             </View>
-            <View style={styles.contentContainer}>
-                {/* Content with white background */}
-            </View>
         </View>
     )
 }
@@ -42,14 +39,14 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     backgroundContainer: {
-        flex: 0.6, // 70% of screen height
+        flex: 1,
     },
     image: {
         flex: 1,
         justifyContent: 'center',
     },
     contentContainer: {
-        flex: 0.4, // 30% of screen height
+        flex: 0.4,
         backgroundColor: colors.white,
     },
     headerContainer: {

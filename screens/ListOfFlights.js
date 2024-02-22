@@ -7,9 +7,9 @@ import { setDate } from 'date-fns';
 const ListOfFlights = ({ route }) => {
     const { data } = route.params;
     const [searchText, setSearchText] = useState('');
-    // const [sortByPrice, setSortByPrice] = useState(false);
     const [sortOrder, setSortOrder] = useState('asc');
 
+    // Format the flight data
     const arraysFromJson = data.map(obj => ({
         id: obj.id,
         fare: obj.fare,
@@ -26,10 +26,9 @@ const ListOfFlights = ({ route }) => {
 
     const handleSortByPrice = () => {
         setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-        // setSortByPrice((prevSortByPrice) => !prevSortByPrice);
     };
 
-     // Sorting function to sort data by price
+    // Sorting by Fare
     const sortByPrice = (a, b) => a.fare - b.fare;
 
 
@@ -43,14 +42,6 @@ const ListOfFlights = ({ route }) => {
     }
     return sortedData;
   };
-
-    // const sortedFlights = sortByPrice
-    //     ? [...arraysFromJson].sort((a, b) => a.fare - b.fare)
-    //     : arraysFromJson;
-
-    // if (sortOrder === 'desc') {
-    //     sortedFlights.reverse();
-    // }
 
     console.log(data);
     const filteredFlights = sortData().filter(
@@ -97,11 +88,9 @@ const ListOfFlights = ({ route }) => {
             </View>
         )
     }
-
-    //console.log(airlines[0].airlineCode);
+    
     return (
         <View style={styles.container}>
-            {/* <Text>ListOfFlights</Text> */}
             <View style={styles.inputContainer}>
                 <TextInput
                     placeholder="Search by airline"
@@ -118,7 +107,6 @@ const ListOfFlights = ({ route }) => {
                 data={filteredFlights}
                 keyExtractor={(item) => item.id}
                 renderItem={renderItem} />
-
         </View>
     )
 }
