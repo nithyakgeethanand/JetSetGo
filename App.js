@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from './screens/Home';
 import SearchFlights from './screens/SearchFlights'
+import ListOfFlights from './screens/ListOfFlights';
 
 const Stack = createStackNavigator();
 
@@ -12,7 +13,8 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Home' screenOptions={{headerTitleAlign: 'center'}}>
         <Stack.Screen name='Home' component={Home} options={{ headerShown: false }} />
-        <Stack.Screen name='SearchFlights' component={SearchFlights}  options={{ headerTitle: ''}}/>
+        <Stack.Screen name='SearchFlights' component={SearchFlights}  options={{ headerTitle: ''}}/> 
+        <Stack.Screen name='ListOfFlights' component={ListOfFlights}  options={{ headerTitle: ''}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
