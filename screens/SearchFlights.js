@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Modal, FlatList } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Modal, FlatList, TouchableWithoutFeedback } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { colors } from '../src/assets/colors'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -6,6 +6,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Feather } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useNavigation } from '@react-navigation/native';
+import { airports } from '../src/assets/airports';
 
 const SearchFlights = () => {
     const navigation = useNavigation();
@@ -25,6 +26,7 @@ const SearchFlights = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [box1Items, setBox1Items] = useState(['DEL', 'Delhi']);
     const [box2Items, setBox2Items] = useState(['TRV', 'Trivandrum']);
+    const [selectedAirport, setSelectedAirport] = useState(null);
 
     const FetchAPI = async () => {
         try {
@@ -46,6 +48,23 @@ const SearchFlights = () => {
         setBox2Items([...temp]);
     }
 
+    const handleFrom = () => {
+        setModalVisible(true);
+    }
+
+    const handleTo = () => {
+        setModalVisible(true);
+    }
+
+    const closeModal = () => {
+        setModalVisible(false);
+    };
+
+    const handleAirportSelection = (airport) => {
+        setSelectedAirport(airport);
+        setModalVisible(false); // Close the modal after selection
+    };
+
     const searchHandle = () => {
         navigation.navigate("ListOfFlights", { data });
     }
@@ -55,9 +74,10 @@ const SearchFlights = () => {
             <Text style={styles.bookFlightText}>Book a flight</Text>
             <View style={styles.fromToContainer}>
 
-                <TouchableOpacity style={styles.box} onPress={null} >
+                <TouchableOpacity style={styles.box} onPress={handleFrom} >
                     <Text style={styles.fromCity}>From</Text>
-                    <Text style={{ fontWeight: "bold", fontSize: 30 }}>{box1Items[0]}</Text>
+                    {/* <Text style={{ fontWeight: "bold", fontSize: 30 }}>{box1Items[0]}</Text> */}
+                    <Text style={{ fontWeight: "bold", fontSize: 30 }}>{selectedAirport ? selectedAirport.airportCode : 'Select Airport'}</Text>
                     <Text style={styles.fromCity}>{box1Items[1]}</Text>
                 </TouchableOpacity>
 
@@ -67,7 +87,7 @@ const SearchFlights = () => {
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity style={styles.box}>
+                <TouchableOpacity style={styles.box} onPress={handleTo}>
                     <Text style={styles.fromCity}>To</Text>
                     <Text style={{ fontWeight: "bold", fontSize: 30 }}>{box2Items[0]}</Text>
                     <Text style={styles.fromCity}>{box2Items[1]}</Text>
@@ -78,20 +98,43 @@ const SearchFlights = () => {
                 visible={modalVisible}
                 animationType="slide"
                 transparent={true}
-                style={{ maxHeight: "55%", marginVertical: "15%" }}
-                onBackdropPress={() => setModalVisible(false)}
+                //style={{ marginVertical: "15%" }}
+                onRequestClose={() => setModalVisible(false)}
             >
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-                    <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, width: '80%' }}>
-                        <Text>modal</Text>
-                        <TextInput
-                            style={{ borderWidth: 1, borderColor: 'gray', padding: 10, marginBottom: 10 }}
-                            placeholder="Search..."
-                            value={searchQuery}
-                            onChangeText={(text) => setSearchQuery(text)}
-                        />
+                <TouchableWithoutFeedback onPress={closeModal}>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                        <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, width: "100%" }}>
+                            <Text>modal</Text>
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={{ fontSize: 20 }}
+                                    placeholder="Search..."
+                                    value={searchQuery}
+                                    onChangeText={(text) => setSearchQuery(text)}
+                                />
+                            </View>
+                            {airports.map((item) => (
+                                <TouchableOpacity key={item.id} 
+                                onPress={() => handleAirportSelection(item)}
+                                 style={{
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                    padding: 10,
+                                    alignItems: "center"
+                                    }}>
+                                    <View>
+                                        <Text>{item.city}</Text>
+                                        <Text>{item.airportName}</Text>
+                                    </View>
+                                    <View>
+                                        <Text>{item.airportCode}</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            ))}
+
+                        </View>
                     </View>
-                </View>
+                </TouchableWithoutFeedback>
             </Modal>
 
             <View style={styles.datePickerContainer}>
@@ -191,7 +234,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: "space-between",
         marginTop: 25,
-        
+
     },
     bottom: {
         flex: 1,
@@ -203,13 +246,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 8,
-        marginBottom:20
+        marginBottom: 20
     },
     buttonText: {
         fontSize: 20,
         color: colors.white,
     },
-    passengers : {
+    passengers: {
         borderWidth: 0,
         backgroundColor: colors.white,
         padding: 10,
@@ -219,5 +262,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: "space-between",
         marginTop: 10,
-    }
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        margin: 16,
+        padding: 8,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 5,
+        height: 50,
+    },
 })

@@ -32,7 +32,7 @@ const ListOfFlights = ({ route }) => {
     const sortByPrice = (a, b) => a.fare - b.fare;
 
 
-  // Function to sort data based on the current sort criteria and order
+  // Sort data based on sort order
   const sortData = () => {
     let sortedData = [...arraysFromJson];
     sortedData = sortedData.sort(sortByPrice);
@@ -43,7 +43,6 @@ const ListOfFlights = ({ route }) => {
     return sortedData;
   };
 
-    console.log(data);
     const filteredFlights = sortData().filter(
         (flight) =>
             flight.airlineName.toLowerCase().includes(searchText.toLowerCase())
@@ -88,7 +87,7 @@ const ListOfFlights = ({ route }) => {
             </View>
         )
     }
-    
+
     return (
         <View style={styles.container}>
             <View style={styles.inputContainer}>
